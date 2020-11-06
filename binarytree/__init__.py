@@ -16,6 +16,8 @@ from binarytree.exceptions import (
     NodeReferenceError,
 )
 
+from binarytree.character import Character
+
 LEFT = 'left'
 RIGHT = 'right'
 VAL = 'val'
@@ -394,7 +396,13 @@ class Node(object):
 
     def __init__(self, value, left=None, right=None):
         if not isinstance(value, numbers.Number):
-            raise NodeValueError('node value must be a number')
+            if isinstance(value, str):
+                try:
+                    value = Character(value)
+                except TypeError:
+                    raise NodeValueError('node value must be a single character if node value is a string')
+            else:
+                raise NodeValueError('node value must be a number')
         if left is not None and not isinstance(left, Node):
             raise NodeTypeError('left child must be a Node instance')
         if right is not None and not isinstance(right, Node):
